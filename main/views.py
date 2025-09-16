@@ -50,7 +50,7 @@ def add_product(request):
         return redirect('main:show_main')
 
     context = {'form': form}
-    return render(request, "add_Product.html", context)
+    return render(request, "add_product.html", context)
 
 def show_product(request, id):
     product = get_object_or_404(Product, pk=id)
