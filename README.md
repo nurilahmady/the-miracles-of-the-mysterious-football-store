@@ -143,3 +143,123 @@ Materi jelas dan runut, mantap.
 
 
 </details>
+
+
+<details> <summary><b>Tugas 4 PBP — Jawaban</b></summary> <br/>
+  
+## 1) Apa itu Django AuthenticationForm? Kelebihan & Kekurangan
+
+AuthenticationForm adalah form bawaan Django (django.contrib.auth.forms.AuthenticationForm) untuk login dengan kredensial (biasanya username & password). Ia melakukan validasi terintegrasi dengan sistem autentikasi Django.
+
+Kelebihan:
+
+- Built-in & aman: validasi password, status user (aktif/nonaktif), pesan error standar.
+- Terintegrasi dengan authenticate()/login() dan middleware sesi.
+- Mudah dipakai: cukup instansiasi di view; bisa dipakai di template dengan {{ form.as_p }}.
+- Extensible: bisa di-subclass untuk menambah field/aturan.
+
+Kekurangan:
+
+- Terikat skema default: login berbasis username. Untuk skema email/SSO perlu kustomisasi tambahan.
+- UI minimal: styling & UX harus diurus sendiri di template.
+- Tidak menyertakan fitur non-inti: mis. rate-limit, CAPTCHA, “remember me” — perlu implementasi manual atau paket pihak ketiga.
+
+## 2) Autentikasi vs Otorisasi & Implementasi di Django
+
+1. Autentikasi (Authentication): verifikasi siapa pengguna (login).
+
+2. Otorisasi (Authorization): menentukan boleh apa setelah dikenali (hak akses).
+
+Di Django:
+
+1. Autentikasi: authenticate() memverifikasi kredensial → login(request, user) menyimpan identitas user di session → tersedia sebagai request.user (via AuthenticationMiddleware).
+
+2. Otorisasi: sistem permissions & groups (user.has_perm('app_label.codename'), user.is_staff, user.is_superuser), decorator @login_required, @permission_required, dan mixins seperti LoginRequiredMixin. (Object-level perms perlu kustom/paket tambahan.)
+
+## 3) Session vs Cookies (menyimpan state)
+
+1. Session (server-side)
+
+Kelebihan: data tidak terlihat di klien (lebih aman), kapasitas lebih besar, mudah di-invalidate dari server.
+
+Kekurangan: butuh penyimpanan di server/DB, ada overhead manajemen & skalabilitas (sticky session/central store).
+
+2. Cookies (client-side)
+
+Kelebihan: sederhana, tidak perlu storage server untuk data kecil, baik untuk preferensi ringan.
+
+Kekurangan: terlihat & dapat dimodifikasi di klien (harus diasumsikan tidak tepercaya), ukuran terbatas, rentan XSS/CSRF jika tak dikonfigurasi aman.
+
+Praktik umum: simpan identifier (session id) di cookie; simpan state sensitif di server (session).
+
+## 4) Keamanan cookies: aman by default? Bagaimana Django menanganinya?
+
+Cookies tidak otomatis aman. Risiko: XSS (mencuri cookie), CSRF, session fixation, pencurian di jaringan non-HTTPS.
+
+Django membantu lewat opsi cookie & middleware:
+
+Flag: HttpOnly (blok akses JS), Secure (hanya via HTTPS), SameSite (mitigasi CSRF lintas-situs). Bisa set untuk session & CSRF cookie:
+SESSION_COOKIE_SECURE, SESSION_COOKIE_HTTPONLY, SESSION_COOKIE_SAMESITE, CSRF_COOKIE_SECURE, CSRF_COOKIE_HTTPONLY, CSRF_COOKIE_SAMESITE.
+
+CSRF protection: CsrfViewMiddleware + token {% csrf_token %} pada form.
+
+Session framework: menyimpan data di server; cookie hanya pegang session id.
+
+
+
+## 5) Implementasi Step-by-Step 
+A. Registrasi, Login, Logout
+
+Siapkan template: halaman register, login, dan tombol/tautan logout (mis. di navbar).
+
+Form: gunakan form bawaan Django untuk registrasi dan login (cukup instansiasi dan render di template).
+
+View Alur:
+
+Register: terima input, validasi, buat akun, tampilkan pesan sukses, arahkan ke login.
+
+Login: validasi kredensial, set sesi user (logged in), set cookie last_login, arahkan ke halaman utama.
+
+Logout: hapus sesi user (logged out), hapus cookie last_login, arahkan ke halaman login.
+
+Proteksi halaman: terapkan pembatasan akses dengan mewajibkan login pada halaman utama/fitur tertentu.
+
+Routing: buat rute untuk register, login, logout, dan halaman utama.
+
+B. Buat 2 Akun & 3 Dummy Data per Akun (lokal)
+
+Buat 2 user: lewat admin panel atau shell (pilih yang nyaman).
+
+Isi data: untuk tiap user, buat 3 data produk menggunakan model yang sudah ada (total 6 entri).
+
+Verifikasi: cek di admin/list view bahwa data tersimpan dan dimiliki oleh user yang tepat.
+
+C. Hubungkan Product dengan User
+
+Relasi: pastikan model produk memiliki relasi ke user (sebagai pemilik/creator).
+
+Migrasi: buat & jalankan migrasi agar skema DB terbarui.
+
+Pemanfaatan: di halaman daftar, tampilkan hanya produk milik user yang sedang login (opsional sesuai kebutuhan).
+
+D. Tampilkan Username & Cookie last_login di Halaman Utama
+
+Konteks tampilan: kirim informasi username user yang sedang login ke template.
+
+Cookie last_login:
+
+Set saat login sukses (waktu saat itu).
+
+Hapus saat logout.
+
+Render di halaman utama: tampilkan username dan waktu last_login jika ada.
+
+## 6) Gambar tampilan halaman utama saat ini
+
+<img width="399" height="937" alt="Screenshot 2025-09-17 161816" src="https://github.com/user-attachments/assets/bef32772-e971-437f-b3c8-61e7d5c2197a" />
+<img width="436" height="922" alt="Screenshot 2025-09-17 161755" src="https://github.com/user-attachments/assets/5881ce9c-03d8-4f04-a2a8-8a93fcff0626" />
+
+
+
+
+</details>
