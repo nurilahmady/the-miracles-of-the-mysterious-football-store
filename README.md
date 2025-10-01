@@ -263,3 +263,110 @@ Render di halaman utama: tampilkan username dan waktu last_login jika ada.
 
 
 </details>
+
+<details> <summary><b>Tugas 5 PBP — Jawaban</b></summary> <br/>
+
+ # 1) Urutan Prioritas CSS Selector
+
+Dalam CSS, aturan yang dipakai ditentukan oleh specificity dan urutan:
+
+Inline style (langsung di atribut style) paling tinggi.
+
+ID selector (#id) lebih kuat dibanding class, pseudo-class, maupun attribute selector.
+
+Class selector (.class), pseudo-class (:hover), dan attribute selector ([type="text"]) berada di bawah ID.
+
+Tag/element selector (div, p, h1) paling rendah.
+
+Jika spesifisitas sama, aturan yang ditulis terakhir yang menang.
+
+!important bisa memaksa aturan dipakai, tapi penggunaannya sebaiknya minimal.
+
+# 2) Pentingnya Responsive Design
+
+Desain responsif penting karena aplikasi web diakses dari berbagai perangkat (mobile, tablet, desktop). Dengan responsive design:
+
+Tampilan otomatis menyesuaikan ukuran layar.
+
+Pengguna lebih nyaman tanpa harus zoom atau geser berlebihan.
+
+Contoh aplikasi responsif: Twitter Web (layout berubah di mobile, navbar jadi menu sederhana).
+Contoh yang tidak responsif: website forum/blog lama (tampilan desktop dipaksa tampil di mobile → teks terlalu kecil, navigasi sulit).
+
+# 3) Perbedaan Margin, Border, Padding
+
+Margin: jarak di luar elemen (antar elemen).
+
+Border: garis yang mengelilingi elemen.
+
+Padding: ruang antara isi elemen dengan border.
+
+
+
+# 4) Konsep Flexbox & Grid Layout
+
+Flexbox (satu dimensi) → fokus row/column. Cocok untuk navbar, toolbar, alignment komponen kecil.
+
+Mudah mengatur spacing, alignment, wrapping.
+
+
+
+Grid Layout (dua dimensi) → bekerja di baris + kolom sekaligus. Cocok untuk dashboard, galeri, layout utama dengan header/content/sidebar/footer.
+
+Bisa definisi presisi area, track size fr/px/%, dan responsif.
+
+
+
+# 5) Step-by-Step Implementasi
+
+- Langkah 1 — Persiapan
+
+Setup Django project + TailwindCSS.
+
+Tambah model Product dengan field (name, description, thumbnail, category, user, created_at, dll).
+
+- Langkah 2 — Routing & Views (Edit & Delete)
+
+Tambah rute edit_product dan delete_product di urls.py.
+
+Buat view dengan get_object_or_404, ProductForm, validasi form, redirect, dan proteksi @login_required.
+
+- Langkah 3 — Tambah Tombol Aksi di Card
+
+Tambahkan tombol Edit (link ke edit_product) dan Delete (form POST dengan CSRF token).
+
+- Langkah 4 — Styling Form & Komponen
+
+Gunakan Tailwind untuk input, textarea, select → ada efek focus, border, dan dark mode.
+
+- Langkah 5 — Responsive List & Empty State
+
+Jika product_list kosong → tampilkan ilustrasi empty.png.
+
+Jika ada data → render dalam grid responsif (grid-cols-1, md:grid-cols-2, lg:grid-cols-3).
+
+- Langkah 6 — Navbar Responsive
+
+Navbar pakai flex + tombol ☰ untuk versi mobile.
+
+Tambahkan JS sederhana toggle class hidden untuk mobile menu.
+
+- Langkah 7 — Kustomisasi Halaman Auth & Produk
+
+Terapkan tema konsisten: background gelap, card dengan shadow, button hover.
+
+- Langkah 8 — Testing & Dokumentasi
+
+Cek di resolusi mobile & desktop.
+
+Update README (tambahkan subbab Tugas 5).
+
+- Langkah 9 — Final Checklist
+
+Validasi media thumbnail.
+
+Pastikan permission edit/delete hanya bisa dilakukan oleh pemilik produk.
+
+Tombol delete aman → hanya POST dengan CSRF.
+
+</details>
