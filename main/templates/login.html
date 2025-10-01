@@ -1,32 +1,147 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block meta %}
-<title>Login</title>
+<title>Mysterious Football Store - Sign In</title>
 {% endblock meta %}
 
 {% block content %}
-<div class="login">
-  <h1>Login</h1>
+<div class="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-black via-gray-950 to-black text-white">
 
-  <form method="POST" action="">
-    {% csrf_token %}
-    <table>
-      {{ form.as_table }}
-      <tr>
-        <td></td>
-        <td><input class="btn login_btn" type="submit" value="Login" /></td>
-      </tr>
-    </table>
-  </form>
+  <!-- Background stadium (lebih gelap) -->
+  <img src="{% static 'image/stadium-bg.jpg' %}" alt="stadium"
+       class="absolute inset-0 w-full h-full object-cover opacity-15 animate-pulse-slow">
 
-  {% if messages %}
-  <ul>
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-  </ul>
-  {% endif %} Don't have an account yet?
-  <a href="{% url 'main:register' %}">Register Now</a>
+  <!-- Glow blobs (tema fuchsia misterius) -->
+  <div class="absolute -top-10 -left-10 w-80 h-80 bg-fuchsia-600/20 rounded-full blur-3xl animate-pulse"></div>
+  <div class="absolute bottom-0 right-0 w-96 h-96 bg-pink-600/20 rounded-full blur-3xl animate-ping"></div>
+
+  <!-- Star field halus -->
+  <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.12)_1px,transparent_1px)] bg-[length:3px_3px] opacity-15"></div>
+
+  <!-- Login Card -->
+  <div class="relative z-10 max-w-md w-full">
+    <div class="bg-gray-950/75 backdrop-blur-xl rounded-2xl shadow-[0_0_24px_rgba(0,0,0,0.8)] border border-fuchsia-700/40 p-8 sm:p-10 animate-fade-in hover:shadow-[0_0_40px_rgba(217,70,239,0.45)] transition-shadow duration-300 login-scope">
+
+      <!-- Logo + Header -->
+      <div class="text-center mb-8">
+        <img src="{% static 'image/football.png' %}" alt="football"
+             class="w-16 h-16 mx-auto animate-spin-slow drop-shadow-[0_0_18px_rgba(255,0,255,0.6)]">
+        <h1 class="mt-4 text-3xl font-extrabold tracking-wide drop-shadow-[0_0_16px_rgba(255,0,255,0.5)]">
+          Sign In
+        </h1>
+        <p class="text-fuchsia-200/80">
+          Welcome to <span class="text-white font-semibold">Mysterious Football Store</span>
+        </p>
+      </div>
+
+      <!-- Error Messages -->
+      {% if form.non_field_errors %}
+        <div class="mb-6 animate-shake">
+          {% for error in form.non_field_errors %}
+            <div class="px-4 py-3 rounded-md text-sm border bg-pink-900/20 border-pink-500/40 text-pink-200 shadow-[0_0_12px_rgba(236,72,153,0.25)]">
+              {{ error }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if form.errors %}
+        <div class="mb-6 animate-shake">
+          {% for field, errors in form.errors.items %}
+            {% if field != '__all__' %}
+              {% for error in errors %}
+                <div class="px-4 py-3 rounded-md text-sm border bg-pink-900/20 border-pink-500/40 text-pink-200 mb-2 shadow-[0_0_12px_rgba(236,72,153,0.25)]">
+                  <strong>{{ field|title }}:</strong> {{ error }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- Form -->
+      <form method="POST" action="" class="space-y-6 animate-slide-up">
+        {% csrf_token %}
+
+        <div>
+          <label for="username" class="block text-sm font-medium text-fuchsia-200 mb-2 tracking-wide">Username</label>
+          <input id="username" name="username" type="text" required
+                 class="w-full px-4 py-3 rounded-lg border border-fuchsia-700/30 bg-[#0b1437] text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-all"
+                 placeholder="Enter your username">
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-medium text-fuchsia-200 mb-2 tracking-wide">Password</label>
+          <input id="password" name="password" type="password" required
+                 class="w-full px-4 py-3 rounded-lg border border-fuchsia-700/30 bg-[#0b1437] text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-all"
+                 placeholder="Enter your password">
+        </div>
+
+        <button type="submit"
+          class="w-full bg-gradient-to-r from-fuchsia-600 via-pink-600 to-fuchsia-700 text-white font-bold py-3 px-4 rounded-lg shadow-[0_0_14px_rgba(217,70,239,0.7)] hover:shadow-[0_0_26px_rgba(217,70,239,0.95)] hover:scale-[1.03] transition-transform">
+          Sign In
+        </button>
+      </form>
+
+      <!-- Messages -->
+      {% if messages %}
+        <div class="mt-6 animate-fade-in">
+          {% for message in messages %}
+            <div class="px-4 py-3 rounded-md text-sm border shadow-sm
+              {% if message.tags == 'success' %}
+                bg-emerald-900/20 border-emerald-500/40 text-emerald-200
+              {% elif message.tags == 'error' %}
+                bg-pink-900/20 border-pink-500/40 text-pink-200
+              {% else %}
+                bg-gray-900/40 border-gray-600/40 text-gray-200
+              {% endif %}
+            ">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- Footer -->
+      <div class="mt-8 text-center pt-6 border-t border-fuchsia-700/30">
+        <p class="text-fuchsia-200/80 text-sm">
+          Don’t have an account?
+          <a href="{% url 'main:register' %}" class="text-white hover:text-fuchsia-300 font-semibold transition-colors">
+            Register Now
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- Extra Animations -->
+<style>
+  @keyframes pulse-slow { 0%,100% {opacity:0.25;} 50% {opacity:0.5;} }
+  .animate-pulse-slow { animation: pulse-slow 8s infinite; }
+
+  @keyframes fade-in { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+  .animate-fade-in { animation: fade-in 1s ease-out forwards; }
+
+  @keyframes slide-up { from {opacity:0; transform:translateY(40px);} to {opacity:1; transform:translateY(0);} }
+  .animate-slide-up { animation: slide-up 1.1s ease-out forwards; }
+
+  @keyframes shake { 0%,100% {transform:translateX(0);} 20%,60% {transform:translateX(-6px);} 40%,80% {transform:translateX(6px);} }
+  .animate-shake { animation: shake 0.4s ease-in-out; }
+
+  @keyframes spin-slow { 0% {transform:rotate(0);} 100% {transform:rotate(360deg);} }
+  .animate-spin-slow { animation: spin-slow 20s linear infinite; }
+
+  /* Autofill override: tetap dongker + teks putih */
+  .login-scope input:-webkit-autofill,
+  .login-scope input:-webkit-autofill:hover,
+  .login-scope input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #ffffff !important;
+    caret-color: #ffffff;
+    -webkit-box-shadow: 0 0 0px 1000px #0b1437 inset !important;
+            box-shadow: 0 0 0px 1000px #0b1437 inset !important;
+    border: 1px solid rgba(217, 70, 239, 0.3) !important;
+  }
+</style>
 {% endblock content %}

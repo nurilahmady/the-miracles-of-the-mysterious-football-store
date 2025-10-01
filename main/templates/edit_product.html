@@ -1,45 +1,51 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block meta %}
-<title>Add Product - Mysterious Football Store</title>
+<title>Edit Product - Football Bidding</title>
 {% endblock meta %}
 
 {% block content %}
-<div class="bg-gradient-to-b from-black via-gray-950 to-black w-full min-h-screen text-white relative overflow-hidden">
-  <!-- glow bg ... (biarkan sesuai punyamu) -->
+<!-- Background: stadium dark + subtle stars -->
+<div class="bg-gradient-to-b from-black via-gray-950 to-black w-full min-h-screen text-white relative overflow-hidden p-6 sm:p-8">
 
-  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
+  <!-- Stadium glow blobs -->
+  <div class="absolute -top-10 left-1/5 w-60 h-60 bg-fuchsia-600/20 rounded-full blur-3xl animate-pulse"></div>
+  <div class="absolute top-16 right-1/4 w-72 h-72 bg-pink-600/20 rounded-full blur-3xl animate-ping"></div>
+  <!-- Star field -->
+  <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.12)_1px,transparent_1px)] bg-[length:3px_3px] opacity-15"></div>
 
-    <!-- Back -->
+  <div class="max-w-3xl w-full mx-auto relative z-10">
+
+    <!-- Back Navigation -->
     <div class="mb-8">
       <a href="{% url 'main:show_main' %}" 
-         class="inline-flex items-center gap-2 text-fuchsia-300/80 hover:text-white font-medium transition-all group">
+         class="text-fuchsia-300/80 hover:text-white font-medium transition-all flex items-center gap-2 group">
         <span class="transition-transform group-hover:-translate-x-1">←</span> Back to Product
       </a>
     </div>
 
     <!-- Form Container -->
-    <div class="rounded-2xl border border-fuchsia-700/40 bg-gray-950/70 backdrop-blur-md p-8 
+    <div class="bg-gray-950/70 backdrop-blur-md rounded-2xl border border-fuchsia-700/40 p-8 sm:p-10 
                 shadow-[0_0_24px_rgba(0,0,0,0.7)] transition-all duration-300 
                 hover:shadow-[0_0_40px_rgba(217,70,239,0.45)]">
 
       <div class="mb-10 text-center">
-        <h1 class="text-3xl sm:text-4xl font-extrabold text-white mb-3 tracking-wide drop-shadow-[0_0_18px_rgba(255,0,255,0.6)]">
-          🧿 Add New Product
+        <h1 class="text-3xl font-extrabold text-white mb-2 tracking-wide drop-shadow-[0_0_18px_rgba(255,0,255,0.6)]">
+          ✏️ Edit Product
         </h1>
-        <p class="text-fuchsia-200/80">Make your secret football product🎃</p>
+        <p class="text-fuchsia-200/80">Update your football product and stories</p>
       </div>
 
-      <!-- Tambahkan wrapper .form-scope -->
+      <!-- Pakai scope agar styling field tidak bentrok yang lain -->
       <form method="POST" class="space-y-7 form-scope">
         {% csrf_token %}
         {% for field in form %}
-          <div class="group">
+          <div>
             <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-fuchsia-200 mb-2 tracking-wide">
               {{ field.label }}
             </label>
-            <div class="w-full">
-              {{ field }}
-            </div>
+            {{ field }}
             {% if field.help_text %}
               <p class="mt-2 text-xs text-fuchsia-300/70 italic">{{ field.help_text }}</p>
             {% endif %}
@@ -49,6 +55,7 @@
           </div>
         {% endfor %}
 
+        <!-- Actions -->
         <div class="flex flex-col sm:flex-row gap-4 pt-8 border-t border-fuchsia-700/30">
           <a href="{% url 'main:show_main' %}" 
              class="order-2 sm:order-1 px-6 py-3 border border-fuchsia-700/40 text-fuchsia-200/90 rounded-lg font-medium 
@@ -61,7 +68,7 @@
                          shadow-[0_0_14px_rgba(217,70,239,0.7)] 
                          hover:shadow-[0_0_26px_rgba(217,70,239,0.95)] 
                          transition-all duration-300 transform hover:scale-[1.03]">
-            Publish Product
+            💾 Update Product
           </button>
         </div>
       </form>
@@ -69,9 +76,8 @@
   </div>
 </div>
 
-<!-- CSS override: biru dongker + teks putih, termasuk autofill -->
+<!-- CSS override: input biru dongker + teks putih (termasuk autofill) -->
 <style>
-  /* Scope agar tidak bentrok ke tempat lain */
   .form-scope input[type="text"],
   .form-scope input[type="number"],
   .form-scope input[type="email"],
@@ -86,35 +92,22 @@
   .form-scope select {
     background-color: #0b1437; /* biru dongker */
     color: #ffffff;            /* teks putih */
-    border: 1px solid rgba(217, 70, 239, 0.3); /* fuchsia border tipis */
+    border: 1px solid rgba(217, 70, 239, 0.3);
     border-radius: 0.5rem;
     padding: 0.75rem 1rem;
     width: 100%;
     outline: none;
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
   }
-
   .form-scope textarea { min-height: 120px; }
-
-  .form-scope select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-image: none;
-  }
-
   .form-scope input::placeholder,
-  .form-scope textarea::placeholder {
-    color: rgba(255,255,255,0.6);
-  }
-
+  .form-scope textarea::placeholder { color: rgba(255,255,255,0.6); }
   .form-scope input:focus,
   .form-scope textarea:focus,
   .form-scope select:focus {
     border-color: rgba(217,70,239,0.6);
     box-shadow: 0 0 0 3px rgba(217,70,239,0.25);
   }
-
   /* Chrome/Safari autofill */
   .form-scope input:-webkit-autofill,
   .form-scope input:-webkit-autofill:hover,
@@ -123,7 +116,6 @@
   .form-scope select:-webkit-autofill {
     -webkit-text-fill-color: #ffffff !important;
     caret-color: #ffffff;
-    /* ganti background autofill (kuning) dengan dongker yang sama */
     -webkit-box-shadow: 0 0 0px 1000px #0b1437 inset !important;
             box-shadow: 0 0 0px 1000px #0b1437 inset !important;
     border: 1px solid rgba(217, 70, 239, 0.3) !important;

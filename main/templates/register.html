@@ -1,32 +1,146 @@
 {% extends 'base.html' %}
 
 {% block meta %}
-<title>Register</title>
+<title>Register - Football Bidding</title>
 {% endblock meta %}
 
 {% block content %}
+<div class="form-style">
+  <div class="min-h-screen relative bg-gradient-to-b from-black via-gray-950 to-black text-white flex items-center justify-center p-8 overflow-hidden">
 
-<div>
-  <h1>Register</h1>
+    <!-- Glow blobs -->
+    <div class="absolute -top-10 -left-10 w-80 h-80 bg-fuchsia-600/20 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-pink-600/20 rounded-full blur-3xl animate-ping"></div>
+    <!-- Star field -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.12)_1px,transparent_1px)] bg-[length:3px_3px] opacity-15"></div>
 
-  <form method="POST">
-    {% csrf_token %}
-    <table>
-      {{ form.as_table }}
-      <tr>
-        <td></td>
-        <td><input type="submit" name="submit" value="Daftar" /></td>
-      </tr>
-    </table>
-  </form>
+    <div class="max-w-md w-full relative z-10">
+      <div class="bg-gray-950/75 border border-fuchsia-700/40 rounded-2xl p-8 shadow-[0_0_24px_rgba(0,0,0,0.8)] hover:shadow-[0_0_40px_rgba(217,70,239,0.45)] backdrop-blur-xl transition-shadow duration-300 register-scope">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl font-extrabold tracking-wide drop-shadow-[0_0_18px_rgba(255,0,255,0.6)] mb-2">Are You Ready?</h2>
+          <p class="text-fuchsia-200/80">Only for the Brave</p>
+        </div>
 
-  {% if messages %}
-  <ul>
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-  </ul>
-  {% endif %}
+        <!-- Form Errors Display -->
+        {% if form.non_field_errors %}
+          <div class="mb-6 animate-shake">
+            {% for error in form.non_field_errors %}
+              <div class="px-4 py-3 rounded text-sm border bg-pink-900/20 border-pink-500/40 text-pink-200 shadow-[0_0_12px_rgba(236,72,153,0.25)]">
+                {{ error }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if form.errors %}
+          <div class="mb-6 animate-shake">
+            {% for field, errors in form.errors.items %}
+              {% if field != '__all__' %}
+                {% for error in errors %}
+                  <div class="px-4 py-3 rounded text-sm border bg-pink-900/20 border-pink-500/40 text-pink-200 mb-2 shadow-[0_0_12px_rgba(236,72,153,0.25)]">
+                    <strong>{{ field|title }}:</strong> {{ error }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <form method="POST" action="" class="space-y-5">
+          {% csrf_token %}
+          
+          <div>
+            <label for="username" class="block text-sm font-semibold text-fuchsia-200 mb-2 tracking-wide">Username</label>
+            <input 
+              id="username" 
+              name="username" 
+              type="text" 
+              required 
+              class="w-full px-4 py-3 rounded-lg border border-fuchsia-700/30 bg-[#0b1437] text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-all" 
+              placeholder="Choose a username">
+          </div>
+
+          <div>
+            <label for="password1" class="block text-sm font-semibold text-fuchsia-200 mb-2 tracking-wide">Password</label>
+            <input 
+              id="password1" 
+              name="password1" 
+              type="password" 
+              required 
+              class="w-full px-4 py-3 rounded-lg border border-fuchsia-700/30 bg-[#0b1437] text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-all" 
+              placeholder="Create a password">
+          </div>
+
+          <div>
+            <label for="password2" class="block text-sm font-semibold text-fuchsia-200 mb-2 tracking-wide">Confirm Password</label>
+            <input 
+              id="password2" 
+              name="password2" 
+              type="password" 
+              required 
+              class="w-full px-4 py-3 rounded-lg border border-fuchsia-700/30 bg-[#0b1437] text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 transition-all" 
+              placeholder="Confirm your password">
+          </div>
+
+          <button 
+            type="submit" 
+            class="w-full bg-gradient-to-r from-fuchsia-600 via-pink-600 to-fuchsia-700 text-white font-semibold py-3 px-4 rounded-lg shadow-[0_0_14px_rgba(217,70,239,0.7)] hover:shadow-[0_0_26px_rgba(217,70,239,0.95)] hover:scale-[1.03] transition-transform">
+            Create Account
+          </button>
+        </form>
+
+        <!-- Messages Display -->
+        {% if messages %}
+          <div class="mt-6">
+            {% for message in messages %}
+              <div 
+                class="px-4 py-3 rounded text-sm border shadow-sm
+                  {% if message.tags == 'success' %}
+                    bg-emerald-900/20 border-emerald-500/40 text-emerald-200
+                  {% elif message.tags == 'error' %}
+                    bg-pink-900/20 border-pink-500/40 text-pink-200
+                  {% else %}
+                    bg-gray-900/40 border-gray-600/40 text-gray-200
+                  {% endif %}
+                ">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="mt-8 text-center pt-6 border-t border-fuchsia-700/30">
+          <p class="text-fuchsia-200/80 text-sm">
+            Already have an account? 
+            <a href="{% url 'main:login' %}" class="text-white hover:text-fuchsia-300 font-semibold transition-colors">
+              Sign In
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- Animations + Autofill override -->
+<style>
+  @keyframes pulse-slow { 0%,100% {opacity:0.25;} 50% {opacity:0.5;} }
+  .animate-pulse { animation: pulse 2s cubic-bezier(0.4,0,0.6,1) infinite; }
+  .animate-ping { animation: ping 2.5s cubic-bezier(0,0,0.2,1) infinite; }
+  .opacity-15 { opacity: .15; }
+
+  @keyframes shake { 0%,100% {transform:translateX(0);} 20%,60% {transform:translateX(-6px);} 40%,80% {transform:translateX(6px);} }
+  .animate-shake { animation: shake 0.4s ease-in-out; }
+
+  /* Autofill: tetap dongker + teks putih */
+  .register-scope input:-webkit-autofill,
+  .register-scope input:-webkit-autofill:hover,
+  .register-scope input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #ffffff !important;
+    caret-color: #ffffff;
+    -webkit-box-shadow: 0 0 0px 1000px #0b1437 inset !important;
+            box-shadow: 0 0 0px 1000px #0b1437 inset !important;
+    border: 1px solid rgba(217, 70, 239, 0.3) !important;
+  }
+</style>
 {% endblock content %}

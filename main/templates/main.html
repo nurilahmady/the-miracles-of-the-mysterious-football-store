@@ -1,56 +1,71 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>Mysterious Football Store</title>
+{% endblock meta %}
+
 {% block content %}
-<h1>Mysterious Football Shop</h1>
+{% include 'navbar.html' %}
 
-<h5>NPM: </h5>
-<p>{{ npm }}</p>
+<!-- Background: darker gradient + subtle animated stars -->
+<div class="bg-gradient-to-b from-black via-gray-950 to-black w-full pt-16 min-h-screen text-white relative overflow-hidden">
 
-<h5>Name:</h5>
-<p>{{ name }}</p>
+  <!-- Stadium Glow Effects -->
+  <div class="absolute top-0 left-1/4 w-56 h-56 bg-fuchsia-500/20 rounded-full blur-3xl animate-pulse"></div>
+  <div class="absolute top-20 right-1/3 w-64 h-64 bg-indigo-600/20 rounded-full blur-3xl animate-ping"></div>
 
-<h5>Class:</h5>
-<p>{{ class }}</p>
+  <!-- Animated stars in background -->
+  <div class="absolute inset-0 bg-[radial-gradient(circle,rgba(255,255,255,0.15)_1px,transparent_1px)] bg-[length:3px_3px] opacity-20"></div>
 
-<a href="{% url 'main:add_product' %}">
-  <button>+ Add Product</button>
-</a>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 relative z-10">
 
-<a href="{% url 'main:logout' %}">
-  <button>Logout</button>
-</a>
+    <!-- Hero Section -->
+    <div class="mb-14 text-center">
+      <h1 class="text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-[0_0_25px_rgba(255,0,255,0.8)] tracking-wide">
+        🧙🏻‍♀️ Mysterious Football Store
+      </h1>
+      <p class="text-fuchsia-200/90 text-lg md:text-xl italic">
+        Where luck decides your next football treasure ✨
+      </p>
+    </div>
 
-<h5>Sesi terakhir login: {{ last_login }}</h5>
+    <!-- Filter Section -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-12 bg-gray-900/60 backdrop-blur-md rounded-xl border border-fuchsia-700/40 p-5 shadow-lg shadow-black/60">
+      <div class="flex space-x-4 mb-4 sm:mb-0">
+        <a href="?" class="{% if request.GET.filter == 'all' or not request.GET.filter %} bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white {% else %}bg-gray-950 text-fuchsia-300 border border-fuchsia-700{% endif %} px-5 py-2.5 rounded-lg font-semibold transition-all duration-300 hover:scale-105 shadow-md">
+          All Products
+        </a>
+        <a href="?filter=my" class="{% if request.GET.filter == 'my' %} bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white {% else %}bg-gray-950 text-fuchsia-300 border border-fuchsia-700{% endif %} px-5 py-2.5 rounded-lg font-semibold transition-all duration-300 hover:scale-105 shadow-md">
+          My Products
+        </a>
+      </div>
+      {% if user.is_authenticated %}
+        <div class="text-sm text-fuchsia-300 italic">
+          Last login: {{ last_login }}
+        </div>
+      {% endif %}
+    </div>
 
-<hr>
-<a href="?filter=all">
-    <button type="button">All Products</button>
-</a>
-<a href="?filter=my">
-    <button type="button">My Products</button>
-</a> 
-{% if not product_list %}
-<p>Belum ada data produk pada Football Shop.</p>
-{% else %}
-
-{% for product in product_list %}
-<div>
-  <h2><a href="{% url 'main:show_product' product.id %}">{{ product.name }}</a></h2>
-
-  <p><b>{{ product.get_category_display }}</b>{% if product.is_featured %} | 
-    <b>Featured</b>{% endif %} | <i>{{ product.created_at|date:"d M Y H:i" }}</i> 
-
-  {% if product.thumbnail %}
-  <img src="{{ product.thumbnail }}" alt="thumbnail" width="150" height="100">
-  <br />
-  {% endif %}
-
-  <p>{{ product.description|truncatewords:25 }}...</p>
-
-  <p><a href="{% url 'main:show_product' product.id %}"><button>Show More</button></a></p>
+    <!-- Product Grid -->
+    {% if not product_list %}
+      <div class="bg-gray-950/80 rounded-xl border border-fuchsia-700/40 p-12 text-center shadow-lg shadow-black/60">
+        <div class="w-32 h-32 mx-auto mb-6 animate-bounce">
+          <img src="{% static 'image/no-product.gif' %}" alt="No product available" class="w-full h-full object-contain drop-shadow-[0_0_10px_rgba(255,0,255,0.6)]">
+        </div>
+        <h3 class="text-2xl font-bold text-white mb-3">No products yet</h3>
+        <p class="text-fuchsia-300/80 mb-8">Be the first to showcase exclusive football gear.</p>
+        <a href="{% url 'main:add_product' %}" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white rounded-lg font-semibold hover:scale-105 hover:shadow-xl transition-transform duration-300">
+          + Add Product
+        </a>
+      </div>
+    {% else %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        {% for product in product_list %}
+          {% include 'card_product.html' with product=product %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
 </div>
-
-<hr>
-{% endfor %}
-
-{% endif %}
 {% endblock content %}

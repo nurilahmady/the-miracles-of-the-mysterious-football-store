@@ -1,0 +1,136 @@
+<nav class="nav-scope fixed top-0 left-0 w-full bg-gray-950/80 backdrop-blur-xl border-b border-fuchsia-700/40 shadow-[0_0_20px_rgba(217,70,239,0.25)] z-50 relative overflow-hidden">
+  <!-- subtle star field + neon edge -->
+  <div class="pointer-events-none absolute inset-0 opacity-15 bg-[radial-gradient(circle,rgba(255,255,255,0.12)_1px,transparent_1px)] bg-[length:3px_3px]"></div>
+  <div class="pointer-events-none absolute -top-24 -left-24 w-80 h-80 bg-fuchsia-600/20 rounded-full blur-3xl"></div>
+  <div class="pointer-events-none absolute -bottom-24 -right-24 w-96 h-96 bg-pink-600/20 rounded-full blur-3xl"></div>
+
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 relative">
+      <div class="flex items-center">
+        <h1 class="text-xl font-semibold text-white tracking-wide drop-shadow-[0_0_14px_rgba(255,0,255,0.45)]">
+          <span class="bg-gradient-to-r from-fuchsia-400 to-pink-500 bg-clip-text text-transparent">Football</span>
+          <span class="text-fuchsia-200/90">Products</span>
+        </h1>
+      </div>
+      
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center space-x-8">
+        <a href="/" class="nav-link">Home</a>
+        <a href="{% url 'main:add_product' %}" class="nav-link">Add Product</a>
+      </div>
+      
+      <!-- Desktop User Section -->
+      <div class="hidden md:flex items-center space-x-6">
+        {% if user.is_authenticated %}
+          <div class="text-right">
+            <div class="text-sm font-medium text-white/95">{{ name|default:user.username }}</div>
+            <div class="text-xs text-fuchsia-200/80">{{ npm|default:"Student" }} - {{ class|default:"Class" }}</div>
+          </div>
+          <a href="{% url 'main:logout' %}" class="nav-link-danger">Logout</a>
+        {% else %}
+          <a href="{% url 'main:login' %}" class="nav-link">Login</a>
+          <a href="{% url 'main:register' %}" class="btn-neon">Register</a>
+        {% endif %}
+      </div>
+      
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden flex items-center">
+        <button class="mobile-menu-button p-2 text-white/90 hover:text-white transition-colors">
+          <span class="sr-only">Open menu</span>
+          <div class="w-6 h-6 flex flex-col justify-center items-center">
+            <span class="bg-current block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm"></span>
+            <span class="bg-current block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm my-0.5"></span>
+            <span class="bg-current block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm"></span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu hidden md:hidden bg-gray-950/90 backdrop-blur-lg border-t border-fuchsia-700/40">
+    <div class="px-6 py-4 space-y-4">
+      <!-- Mobile Navigation Links -->
+      <div class="space-y-1">
+        <a href="/" class="nav-link block py-3">Home</a>
+        <a href="{% url 'main:add_product' %}" class="nav-link block py-3">Add Product</a>
+      </div>
+      
+      <!-- Mobile User Section -->
+      <div class="border-t border-fuchsia-700/30 pt-4">
+        {% if user.is_authenticated %}
+          <div class="mb-4">
+            <div class="font-medium text-white/95">{{ name|default:user.username }}</div>
+            <div class="text-sm text-fuchsia-200/80">{{ npm|default:"Student" }} - {{ class|default:"Class" }}</div>
+          </div>
+          <a href="{% url 'main:logout' %}" class="nav-link-danger block py-3">Logout</a>
+        {% else %}
+          <div class="space-y-3">
+            <a href="{% url 'main:login' %}" class="nav-link block py-3">Login</a>
+            <a href="{% url 'main:register' %}" class="btn-neon block text-center">Register</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const btn = document.querySelector("button.mobile-menu-button");
+    const menu = document.querySelector(".mobile-menu");
+    btn.addEventListener("click", () => {
+      menu.classList.toggle("hidden");
+    });
+  </script>
+</nav>
+
+<!-- Scoped navbar styles -->
+<style>
+  .nav-scope .nav-link {
+    position: relative;
+    color: rgba(255,255,255,0.8);
+    font-weight: 600;
+    transition: color .2s ease, transform .2s ease, text-shadow .2s ease;
+    text-decoration: none;
+  }
+  .nav-scope .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0; bottom: -6px;
+    height: 2px; width: 0%;
+    background: linear-gradient(90deg, #e879f9, #db2777);
+    box-shadow: 0 0 10px rgba(217,70,239,.75), 0 0 20px rgba(236,72,153,.5);
+    transition: width .25s ease;
+    border-radius: 9999px;
+  }
+  .nav-scope .nav-link:hover {
+    color: #fff;
+    text-shadow: 0 0 10px rgba(217,70,239,.6);
+    transform: translateY(-1px);
+  }
+  .nav-scope .nav-link:hover::after { width: 100%; }
+
+  .nav-scope .nav-link-danger {
+    color: #fca5a5;
+    font-weight: 700;
+    transition: color .2s ease, text-shadow .2s ease;
+  }
+  .nav-scope .nav-link-danger:hover {
+    color: #fecaca;
+    text-shadow: 0 0 10px rgba(239,68,68,.6);
+  }
+
+  .nav-scope .btn-neon {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: .5rem;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(90deg, #a21caf, #db2777);
+    box-shadow: 0 0 12px rgba(217,70,239,.6);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .nav-scope .btn-neon:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 22px rgba(217,70,239,.95);
+  }
+</style>
